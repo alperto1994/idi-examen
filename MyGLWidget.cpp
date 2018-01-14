@@ -342,9 +342,14 @@ void MyGLWidget::modelTransformPatricio ()
 void MyGLWidget::modelTransformPatricio2 ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
+  //TG = glm::scale(TG, glm::vec3(escala, escala, escala));
+  //TG = glm::translate(TG, -centrePatr2);
+  //TG = glm::rotate(TG, (float)M_PI, glm::vec3 (0.0, 0.0, 1.0));
+
+  TG = glm::translate(TG, glm::vec3(0.0, radiEsc, 0.0));
+  TG = glm::rotate(TG, (float)M_PI, glm::vec3 (0.0, 0.0, 1.0));//1ultimo
   TG = glm::scale(TG, glm::vec3(escala, escala, escala));
-  TG = glm::translate(TG, -centrePatr2);
-  TG = glm::rotate(TG, (float)M_PI, glm::vec3 (0.0, 0.0, 1.0));
+  TG = glm::translate(TG, -centrePatr);
 
   glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
 }
