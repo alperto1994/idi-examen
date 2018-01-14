@@ -44,6 +44,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     void modelTransformPatricio2 ();
     void calculaCapsaModel ();
     void calculaCapsaModel2 ();
+    void inicialitzaCamera();
 
 
     // VAO i VBO names
@@ -66,6 +67,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     float escala;
     // radi de l'escena
     float radiEsc;
+    float fov, ra, fovi, znear, zfar;
 
     typedef  enum {NONE, ROTATE} InteractiveAction;
     InteractiveAction DoingInteractive;

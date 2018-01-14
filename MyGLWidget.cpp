@@ -28,6 +28,7 @@ void MyGLWidget::initializeGL ()
   glEnable (GL_DEPTH_TEST);
   carregaShaders ();
   createBuffers ();
+  inicialitzaCamera();
   projectTransform ();
   viewTransform ();
 }
@@ -62,7 +63,28 @@ void MyGLWidget::paintGL ()
 
 void MyGLWidget::resizeGL (int w, int h)
 {
-  glViewport(0, 0, w, h);
+    //Calculem ra de nou
+    ra = float (w) / float (h);
+    //Si ra es menor que 1, toca recalcular el fov
+    if (ra < 1.0) {
+      fov = 2.0 * atan(tan(fovi/2.0)/ra);
+    }
+    projectTransform();
+    //Indiquem el nou viewport
+    glViewport(0, 0, w, h);
+}
+
+void MyGLWidget::inicialitzaCamera() {
+    //Inicialitzem la resta de valors de càmera
+
+    znear = radiEsc/2;
+    zfar  = 4.0f*radiEsc;
+    fovi  = float(M_PI/2.0); // (float)M_PI / 2.0f;
+    fov   = fovi;
+    ra    = 1.0f;
+
+    //projectTransform ();
+    //viewTransform ();
 }
 
 void MyGLWidget::createBuffers ()
@@ -365,7 +387,7 @@ void MyGLWidget::projectTransform ()
 {
   glm::mat4 Proj;  // Matriu de projecció
   if (perspectiva)
-    Proj = glm::perspective(float(M_PI/3.0), 1.0f, radiEsc, 3.0f*radiEsc);
+    Proj = glm::perspective(fov, ra, znear, zfar);
   else
     Proj = glm::ortho(-radiEsc, radiEsc, -radiEsc, radiEsc, radiEsc, 3.0f*radiEsc);
 
