@@ -7,9 +7,10 @@ MyGLWidget::MyGLWidget (QWidget* parent) : QOpenGLWidget(parent)
   setFocusPolicy(Qt::StrongFocus);  // per rebre events de teclat
   xClick = yClick = 0;
   angleY = 0.0;
+  angleX = M_PI/8.;
   perspectiva = true;
   DoingInteractive = NONE;
-  radiEsc = sqrt(25);
+  radiEsc = sqrt(5);
 }
 
 MyGLWidget::~MyGLWidget ()
@@ -375,6 +376,7 @@ void MyGLWidget::viewTransform ()
 {
   glm::mat4 View;  // Matriu de posició i orientació
   View = glm::translate(glm::mat4(1.f), glm::vec3(0, 0, -2*radiEsc));
+  View = glm::rotate(View, angleX, glm::vec3(1, 0, 0));
   View = glm::rotate(View, -angleY, glm::vec3(0, 1, 0));
 
   glUniformMatrix4fv (viewLoc, 1, GL_FALSE, &View[0][0]);
@@ -474,6 +476,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *e)
   {
     // Fem la rotació
     angleY += (e->x() - xClick) * M_PI / 180.0;
+    angleX += (yClick - e->y()) * M_PI / 180.0;
     viewTransform ();
   }
 
