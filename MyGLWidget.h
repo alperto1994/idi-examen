@@ -10,7 +10,7 @@
 
 #include "model.h"
 
-class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core 
+class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
   Q_OBJECT
 
@@ -28,7 +28,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     virtual void resizeGL (int width, int height);
     // keyPressEvent - Es cridat quan es prem una tecla
     virtual void keyPressEvent (QKeyEvent *event);
-    // mouse{Press/Release/Move}Event - Són cridades quan es realitza l'event 
+    // mouse{Press/Release/Move}Event - Són cridades quan es realitza l'event
     // corresponent de ratolí
     virtual void mousePressEvent (QMouseEvent *event);
     virtual void mouseReleaseEvent (QMouseEvent *event);
@@ -41,11 +41,15 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     void viewTransform ();
     void modelTransformTerra ();
     void modelTransformPatricio ();
+    void modelTransformPatricio2 ();
     void calculaCapsaModel ();
+    void calculaCapsaModel2 ();
+
 
     // VAO i VBO names
     GLuint VAO_Patr, VBO_PatrPos, VBO_PatrNorm, VBO_PatrMatamb, VBO_PatrMatdiff, VBO_PatrMatspec, VBO_PatrMatshin;
     GLuint VAO_Terra, VBO_TerraPos, VBO_TerraNorm, VBO_TerraMatamb, VBO_TerraMatdiff, VBO_TerraMatspec, VBO_TerraMatshin;
+    GLuint VAO_Patr2, VBO_Patr2Pos, VBO_Patr2Norm, VBO_Patr2Matamb, VBO_Patr2Matdiff, VBO_Patr2Matspec, VBO_Patr2Matshin;
     // Program
     QOpenGLShaderProgram *program;
     // uniform locations
@@ -55,8 +59,10 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 
     // model
     Model patr;
+    Model patr2;
     // paràmetres calculats a partir de la capsa contenidora del model
     glm::vec3 centrePatr;
+    glm::vec3 centrePatr2;
     float escala;
     // radi de l'escena
     float radiEsc;
@@ -66,5 +72,6 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     int xClick, yClick;
     float angleY;
     bool perspectiva;
-};
 
+    float minx, miny, minz, maxx, maxy, maxz;
+};
