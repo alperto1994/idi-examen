@@ -53,9 +53,9 @@ void MyGLWidget::paintGL ()
   // Pintem l'escena
   glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
 
-  glBindVertexArray (VAO_Patr2);
+  //glBindVertexArray (VAO_Patr2);
   modelTransformPatricio2 ();
-  glDrawArrays(GL_TRIANGLES, 0, patr2.faces().size()*3);
+  glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
 
 
   glBindVertexArray(0);
@@ -149,70 +149,6 @@ void MyGLWidget::createBuffers ()
 
   glVertexAttribPointer(matshinLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(matshinLoc);
-
-
-
-  // Carreguem el model de l'OBJ - Atenció! Abans de crear els buffers!
-  patr2.load("./models/Patricio.obj");
-
-  // Calculem la capsa contenidora del model -> calculada abans
-  calculaCapsaModel2 ();
-
-  // Creació del Vertex Array Object del Patricio
-  glGenVertexArrays(1, &VAO_Patr2);
-  glBindVertexArray(VAO_Patr2);
-
-  // Creació dels buffers del model patr
-  // Buffer de posicions
-  glGenBuffers(1, &VBO_Patr2Pos);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Pos);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3*3, patr2.VBO_vertices(), GL_STATIC_DRAW);
-
-  // Activem l'atribut vertexLoc
-  glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(vertexLoc);
-
-  // Buffer de normals
-  glGenBuffers(1, &VBO_Patr2Norm);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Norm);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3*3, patr2.VBO_normals(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(normalLoc);
-
-  // En lloc del color, ara passem tots els paràmetres dels materials
-  // Buffer de component ambient
-  glGenBuffers(1, &VBO_Patr2Matamb);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Matamb);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3*3, patr2.VBO_matamb(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(matambLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(matambLoc);
-
-  // Buffer de component difusa
-  glGenBuffers(1, &VBO_Patr2Matdiff);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Matdiff);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3*3, patr2.VBO_matdiff(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(matdiffLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(matdiffLoc);
-
-  // Buffer de component especular
-  glGenBuffers(1, &VBO_Patr2Matspec);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Matspec);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3*3, patr2.VBO_matspec(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(matspecLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(matspecLoc);
-
-  // Buffer de component shininness
-  glGenBuffers(1, &VBO_Patr2Matshin);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO_Patr2Matshin);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*patr2.faces().size()*3, patr2.VBO_matshin(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(matshinLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(matshinLoc);
-
 
 
   // Dades del terra
@@ -428,35 +364,7 @@ void MyGLWidget::calculaCapsaModel ()
   }
   escala = 2.0/(maxy-miny);
   centrePatr[0] = (minx+maxx)/2.0; centrePatr[1] = (miny+maxy)/2.0; centrePatr[2] = (minz+maxz)/2.0;
-  std::cout << "centrePatr1: (" << centrePatr[0] << ", " << centrePatr[1] << ", " << centrePatr[2] << ")"<< std::endl;
-}
-
-void MyGLWidget::calculaCapsaModel2 ()
-{
-  // Càlcul capsa contenidora i valors transformacions inicials
-  float mminx, mminy, mminz, mmaxx, mmaxy, mmaxz;
-  mminx = mmaxx = patr2.vertices()[0];
-  mminy = mmaxy = patr2.vertices()[1];
-  mminz = mmaxz = patr2.vertices()[2];
-  for (unsigned int i = 3; i < patr2.vertices().size(); i+=3)
-  {
-    if (patr2.vertices()[i+0] < mminx)
-      mminx = patr2.vertices()[i+0];
-    if (patr2.vertices()[i+0] > mmaxx)
-      mmaxx = patr2.vertices()[i+0];
-    if (patr2.vertices()[i+1] < mminy)
-      mminy = patr2.vertices()[i+1];
-    if (patr2.vertices()[i+1] > mmaxy)
-      mmaxy = patr2.vertices()[i+1];
-    if (patr2.vertices()[i+2] < mminz)
-      mminz = patr2.vertices()[i+2];
-    if (patr2.vertices()[i+2] > mmaxz)
-      mmaxz = patr2.vertices()[i+2];
-  }
-  escala = 2.0/(mmaxy-mminy);
-  centrePatr2[0] = (mminx+mmaxx)/2.0; centrePatr2[1] = (mminy+mmaxy)/2.0; centrePatr2[2] = (mminz+mmaxz)/2.0;
-  centrePatr2[1] = centrePatr[1];
-  std::cout << "centrePatr2: (" << centrePatr2[0] << ", " << centrePatr2[1] << ", " << centrePatr2[2] << ")"<< std::endl;
+  radiEsc = (maxy - miny) * escala;
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent* event)
