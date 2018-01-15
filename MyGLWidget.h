@@ -74,7 +74,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     float radiEsc;
     float fov, ra, fovi, znear, zfar;
 
-    typedef  enum {NONE, ROTATE} InteractiveAction;
+    typedef  enum {NONE, ROTATE, ZOOM} InteractiveAction;
     InteractiveAction DoingInteractive;
     int xClick, yClick;
     float angleY, angleX;
