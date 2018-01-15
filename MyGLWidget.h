@@ -48,14 +48,17 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     void modelTransformTerra ();
     void modelTransformPatricio ();
     void modelTransformPatricio2 ();
+    void modelTransformVaca ();
     void calculaCapsaModel ();
     void calculaCapsaModel2 ();
+    void calculaCapsaModelVaca ();
     void inicialitzaCamera();
 
 
     // VAO i VBO names
     GLuint VAO_Patr, VBO_PatrPos, VBO_PatrNorm, VBO_PatrMatamb, VBO_PatrMatdiff, VBO_PatrMatspec, VBO_PatrMatshin;
     GLuint VAO_Terra, VBO_TerraPos, VBO_TerraNorm, VBO_TerraMatamb, VBO_TerraMatdiff, VBO_TerraMatspec, VBO_TerraMatshin;
+    GLuint VAO_Vaca, VBO_VacaPos, VBO_VacaNorm, VBO_VacaMatamb, VBO_VacaMatdiff, VBO_VacaMatspec, VBO_VacaMatshin;
     // Program
     QOpenGLShaderProgram *program;
     // uniform locations
@@ -64,12 +67,10 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     GLuint vertexLoc, normalLoc, matambLoc, matdiffLoc, matspecLoc, matshinLoc;
 
     // model
-    Model patr;
-    Model patr2;
+    Model patr, vaca;
     // paràmetres calculats a partir de la capsa contenidora del model
-    glm::vec3 centrePatr;
-    glm::vec3 centrePatr2;
-    float escala;
+    glm::vec3 centrePatr, centreVaca;
+    float escala, escalaVaca;
     // radi de l'escena
     float radiEsc;
     float fov, ra, fovi, znear, zfar;

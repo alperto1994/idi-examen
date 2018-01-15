@@ -38,25 +38,20 @@ void MyGLWidget::paintGL ()
   // Esborrem el frame-buffer i el depth-buffer
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Activem el VAO per a pintar el terra
+  // Terra
   glBindVertexArray (VAO_Terra);
-
   modelTransformTerra ();
-
-  // pintem
   glDrawArrays(GL_TRIANGLES, 0, 12);
 
-  // Activem el VAO per a pintar el Patricio
+  // Patricio
   glBindVertexArray (VAO_Patr);
-
   modelTransformPatricio ();
-  // Pintem l'escena
   glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
 
-  //glBindVertexArray (VAO_Patr2);
-  modelTransformPatricio2 ();
-  glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
-
+  // Vaca
+  glBindVertexArray (VAO_Vaca);
+  modelTransformVaca();
+  glDrawArrays(GL_TRIANGLES, 0, vaca.faces().size()*3);
 
   glBindVertexArray(0);
 }
@@ -249,6 +244,69 @@ void MyGLWidget::createBuffers ()
   glVertexAttribPointer(matshinLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(matshinLoc);
 
+  //Dades vaca
+  // Carreguem el model de l'OBJ - Atenció! Abans de crear els buffers!
+  vaca.load("./models/cow.obj");
+
+  // Calculem la capsa contenidora del model
+  calculaCapsaModelVaca ();
+
+  // Creació del Vertex Array Object del Patricio
+  glGenVertexArrays(1, &VAO_Vaca);
+  glBindVertexArray(VAO_Vaca);
+
+  // Creació dels buffers del model patr
+  // Buffer de posicions
+  glGenBuffers(1, &VBO_VacaPos);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaPos);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3*3, vaca.VBO_vertices(), GL_STATIC_DRAW);
+
+  // Activem l'atribut vertexLoc
+  glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(vertexLoc);
+
+  // Buffer de normals
+  glGenBuffers(1, &VBO_VacaNorm);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaNorm);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3*3, vaca.VBO_normals(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(normalLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(normalLoc);
+
+  // En lloc del color, ara passem tots els paràmetres dels materials
+  // Buffer de component ambient
+  glGenBuffers(1, &VBO_VacaMatamb);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaMatamb);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3*3, vaca.VBO_matamb(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(matambLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(matambLoc);
+
+  // Buffer de component difusa
+  glGenBuffers(1, &VBO_VacaMatdiff);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaMatdiff);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3*3, vaca.VBO_matdiff(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(matdiffLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(matdiffLoc);
+
+  // Buffer de component especular
+  glGenBuffers(1, &VBO_VacaMatspec);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaMatspec);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3*3, vaca.VBO_matspec(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(matspecLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(matspecLoc);
+
+  // Buffer de component shininness
+  glGenBuffers(1, &VBO_VacaMatshin);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO_VacaMatshin);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vaca.faces().size()*3, vaca.VBO_matshin(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(matshinLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+  glEnableVertexAttribArray(matshinLoc);
+
+
   glBindVertexArray(0);
 }
 
@@ -313,6 +371,21 @@ void MyGLWidget::modelTransformPatricio2 ()
   glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
 }
 
+void MyGLWidget::modelTransformVaca ()
+{
+  glm::mat4 TG(1.f);  // Matriu de transformació
+  //TG = glm::scale(TG, glm::vec3(escalaVaca, escalaVaca, escalaVaca));
+  //TG = glm::translate(TG, -centreVaca);
+
+  /*TG = glm::translate(TG, glm::vec3(1.0, -0.5, 0.0));
+  TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (0.0, 1.0, 0.0));
+  TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (1.0, 0.0, 0.0));
+  TG = glm::scale(TG, glm::vec3(escalaVaca, escalaVaca, escalaVaca));
+  TG = glm::translate(TG, -centreVaca);*/
+
+  glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
+}
+
 void MyGLWidget::modelTransformTerra ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
@@ -365,6 +438,32 @@ void MyGLWidget::calculaCapsaModel ()
   escala = 2.0/(maxy-miny);
   centrePatr[0] = (minx+maxx)/2.0; centrePatr[1] = (miny+maxy)/2.0; centrePatr[2] = (minz+maxz)/2.0;
   radiEsc = (maxy - miny) * escala;
+}
+
+void MyGLWidget::calculaCapsaModelVaca ()
+{
+  // Càlcul capsa contenidora i valors transformacions inicials
+  float minx, miny, minz, maxx, maxy, maxz;
+  minx = maxx = vaca.vertices()[0];
+  miny = maxy = vaca.vertices()[1];
+  minz = maxz = vaca.vertices()[2];
+  for (unsigned int i = 3; i < vaca.vertices().size(); i+=3)
+  {
+    if (vaca.vertices()[i+0] < minx)
+      minx = vaca.vertices()[i+0];
+    if (vaca.vertices()[i+0] > maxx)
+      maxx = vaca.vertices()[i+0];
+    if (vaca.vertices()[i+1] < miny)
+      miny = vaca.vertices()[i+1];
+    if (vaca.vertices()[i+1] > maxy)
+      maxy = vaca.vertices()[i+1];
+    if (vaca.vertices()[i+2] < minz)
+      minz = vaca.vertices()[i+2];
+    if (vaca.vertices()[i+2] > maxz)
+      maxz = vaca.vertices()[i+2];
+  }
+  escalaVaca = 0.5/(maxy-miny);
+  centreVaca[0] = (minx+maxx)/2.0; centreVaca[1] = (miny+maxy)/2.0; centreVaca[2] = (minz+maxz)/2.0;
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent* event)
