@@ -406,8 +406,14 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *e)
   {
     // Fem la rotació
     angleY += (e->x() - xClick) * M_PI / 180.0;
-    angleX += (yClick - e->y()) * M_PI / 180.0;
+
+    //Fem el zoom
+    float nouFov = fov + (e->y() - yClick) * M_PI / 180.0;
+    if (nouFov > 0.0 and nouFov < float(M_PI)) {
+        fov = nouFov;
+    }
     viewTransform ();
+    projectTransform ();
   }
 
   xClick = e->x();
