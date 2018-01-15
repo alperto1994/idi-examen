@@ -343,7 +343,7 @@ void MyGLWidget::viewTransform ()
 void MyGLWidget::calculaCapsaModel ()
 {
   // Càlcul capsa contenidora i valors transformacions inicials
-  //float minx, miny, minz, maxx, maxy, maxz;
+  float minx, miny, minz, maxx, maxy, maxz;
   minx = maxx = patr.vertices()[0];
   miny = maxy = patr.vertices()[1];
   minz = maxz = patr.vertices()[2];

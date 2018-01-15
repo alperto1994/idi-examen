@@ -56,7 +56,6 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     // VAO i VBO names
     GLuint VAO_Patr, VBO_PatrPos, VBO_PatrNorm, VBO_PatrMatamb, VBO_PatrMatdiff, VBO_PatrMatspec, VBO_PatrMatshin;
     GLuint VAO_Terra, VBO_TerraPos, VBO_TerraNorm, VBO_TerraMatamb, VBO_TerraMatdiff, VBO_TerraMatspec, VBO_TerraMatshin;
-    GLuint VAO_Patr2, VBO_Patr2Pos, VBO_Patr2Norm, VBO_Patr2Matamb, VBO_Patr2Matdiff, VBO_Patr2Matspec, VBO_Patr2Matshin;
     // Program
     QOpenGLShaderProgram *program;
     // uniform locations
@@ -80,6 +79,4 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     int xClick, yClick;
     float angleY, angleX;
     bool perspectiva;
-
-    float minx, miny, minz, maxx, maxy, maxz;
 };
