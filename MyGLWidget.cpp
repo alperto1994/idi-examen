@@ -411,6 +411,7 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *e)
     float nouFov = fov + (e->y() - yClick) * M_PI / 180.0;
     if (nouFov > 0.0 and nouFov < float(M_PI)) {
         fov = nouFov;
+        emit sendFov(int((fov * 180.0) / M_PI));
     }
     viewTransform ();
     projectTransform ();
@@ -420,4 +421,11 @@ void MyGLWidget::mouseMoveEvent(QMouseEvent *e)
   yClick = e->y();
 
   update ();
+}
+
+void MyGLWidget::changeFov(int fov_s) {
+    makeCurrent();
+    fov = (float) M_PI * fov_s / 180.0;
+    projectTransform();
+    update();
 }
