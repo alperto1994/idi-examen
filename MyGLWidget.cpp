@@ -14,6 +14,7 @@ MyGLWidget::MyGLWidget (QWidget* parent) : QOpenGLWidget(parent)
   angleY = 0.0;
   angleX = 0.0;//M_PI/8.;
   escala = 2.0;
+  angleGir = 0.0;
   perspectiva = true;
   DoingInteractive = NONE;
   //radiEsc = sqrt(45); //se inicializa en calcula capsa model
@@ -361,6 +362,7 @@ void MyGLWidget::modelTransformPatricio ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
   TG = glm::translate(TG, glm::vec3(1.0, 0.0, 0.0));
+  TG = glm::rotate(TG, angleGir, glm::vec3 (0.0, 1.0, 0.0));
   TG = glm::scale(TG, glm::vec3(escalaPatricio, escalaPatricio, escalaPatricio));
   TG = glm::translate(TG, -centrePatr);
 
@@ -383,6 +385,7 @@ void MyGLWidget::modelTransformVaca ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
   TG = glm::translate(TG, glm::vec3(1.0, -0.5, 0.0));
+  TG = glm::rotate(TG, angleGir, glm::vec3 (0.0, 1.0, 0.0));
   TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (0.0, 1.0, 0.0));
   TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (1.0, 0.0, 0.0));
   TG = glm::scale(TG, glm::vec3(escalaVaca, escalaVaca, escalaVaca));
@@ -479,6 +482,9 @@ void MyGLWidget::keyPressEvent(QKeyEvent* event)
       perspectiva = !perspectiva;
       projectTransform ();
       break;
+    }
+    case Qt::Key_R: {
+        angleGir += (float) M_PI /6.0;
     }
     default: event->ignore(); break;
   }
