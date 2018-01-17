@@ -50,7 +50,6 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     void modelTransformPatricio2 ();
     void modelTransformVaca ();
     void calculaCapsaModel ();
-    void calculaCapsaModel2 ();
     void calculaCapsaModelVaca ();
     void inicialitzaCamera();
 
@@ -70,7 +69,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     Model patr, vaca;
     // paràmetres calculats a partir de la capsa contenidora del model
     glm::vec3 centrePatr, centreVaca;
-    float escala, escalaVaca;
+    float escala, escalaVaca, escalaPatricio;
     // radi de l'escena
     float radiEsc;
     float fov, ra, fovi, znear, zfar;

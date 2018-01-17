@@ -2,15 +2,21 @@
 
 #include <iostream>
 
+/*
+proj y view afectan a la camara y como se mueve la escena al interactuar con ella
+TG sirve para colocar los objetos en la escena como queramos
+*/
+
 MyGLWidget::MyGLWidget (QWidget* parent) : QOpenGLWidget(parent)
 {
   setFocusPolicy(Qt::StrongFocus);  // per rebre events de teclat
   xClick = yClick = 0;
   angleY = 0.0;
-  angleX = M_PI/8.;
+  angleX = 0.0;//M_PI/8.;
+  escala = 2.0;
   perspectiva = true;
   DoingInteractive = NONE;
-  radiEsc = sqrt(5);
+  //radiEsc = sqrt(45); //se inicializa en calcula capsa model
 }
 
 MyGLWidget::~MyGLWidget ()
@@ -47,6 +53,9 @@ void MyGLWidget::paintGL ()
   glBindVertexArray (VAO_Patr);
   modelTransformPatricio ();
   glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
+
+  //modelTransformPatricio2 ();
+  //glDrawArrays(GL_TRIANGLES, 0, patr.faces().size()*3);
 
   // Vaca
   glBindVertexArray (VAO_Vaca);
@@ -89,6 +98,7 @@ void MyGLWidget::createBuffers ()
 
   // Calculem la capsa contenidora del model
   calculaCapsaModel ();
+  std::cout << "x: "<< centrePatr[0] << ", y: " << centrePatr[1] << ", z:" << centrePatr[2] << std::endl;
 
   // Creació del Vertex Array Object del Patricio
   glGenVertexArrays(1, &VAO_Patr);
@@ -350,7 +360,8 @@ void MyGLWidget::carregaShaders()
 void MyGLWidget::modelTransformPatricio ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
-  TG = glm::scale(TG, glm::vec3(escala, escala, escala));
+  TG = glm::translate(TG, glm::vec3(1.0, 0.0, 0.0));
+  TG = glm::scale(TG, glm::vec3(escalaPatricio, escalaPatricio, escalaPatricio));
   TG = glm::translate(TG, -centrePatr);
 
   glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
@@ -359,14 +370,11 @@ void MyGLWidget::modelTransformPatricio ()
 void MyGLWidget::modelTransformPatricio2 ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
-  //TG = glm::scale(TG, glm::vec3(escala, escala, escala));
-  //TG = glm::translate(TG, -centrePatr2);
-  //TG = glm::rotate(TG, (float)M_PI, glm::vec3 (0.0, 0.0, 1.0));
-
-  TG = glm::translate(TG, glm::vec3(0.0, radiEsc, 0.0));
-  TG = glm::rotate(TG, (float)M_PI, glm::vec3 (0.0, 0.0, 1.0));//1ultimo
   TG = glm::scale(TG, glm::vec3(escala, escala, escala));
+  //TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (1.0, 0.0, 0.0));//M_PI/2.0: un cuarto de vuelta
   TG = glm::translate(TG, -centrePatr);
+  TG = glm::translate(TG, glm::vec3(-3.0, 2.0, -6.0));
+
 
   glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
 }
@@ -374,14 +382,11 @@ void MyGLWidget::modelTransformPatricio2 ()
 void MyGLWidget::modelTransformVaca ()
 {
   glm::mat4 TG(1.f);  // Matriu de transformació
-  //TG = glm::scale(TG, glm::vec3(escalaVaca, escalaVaca, escalaVaca));
-  //TG = glm::translate(TG, -centreVaca);
-
-  /*TG = glm::translate(TG, glm::vec3(1.0, -0.5, 0.0));
+  TG = glm::translate(TG, glm::vec3(1.0, -0.5, 0.0));
   TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (0.0, 1.0, 0.0));
   TG = glm::rotate(TG, (float)(-M_PI/2.0), glm::vec3 (1.0, 0.0, 0.0));
   TG = glm::scale(TG, glm::vec3(escalaVaca, escalaVaca, escalaVaca));
-  TG = glm::translate(TG, -centreVaca);*/
+  TG = glm::translate(TG, -centreVaca);
 
   glUniformMatrix4fv (transLoc, 1, GL_FALSE, &TG[0][0]);
 }
@@ -435,9 +440,9 @@ void MyGLWidget::calculaCapsaModel ()
     if (patr.vertices()[i+2] > maxz)
       maxz = patr.vertices()[i+2];
   }
-  escala = 2.0/(maxy-miny);
+  escalaPatricio = 0.25/(maxy-miny);
   centrePatr[0] = (minx+maxx)/2.0; centrePatr[1] = (miny+maxy)/2.0; centrePatr[2] = (minz+maxz)/2.0;
-  radiEsc = (maxy - miny) * escala;
+  radiEsc = (maxy - miny) * 2.0/(maxy-miny);
 }
 
 void MyGLWidget::calculaCapsaModelVaca ()
